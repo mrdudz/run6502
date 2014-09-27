@@ -3,10 +3,21 @@ CC=$(DEVPREFIX)/bin/cc65
 AS=$(DEVPREFIX)/bin/ca65
 LD=$(DEVPREFIX)/bin/ld65
 AR=$(DEVPREFIX)/bin/ar65
-CL=$(DEVPREFIX)/bin/cl65
+LIBPREFIX=$(DEVPREFIX)/lib
+
+#DEVPREFIX=~/Desktop/cc65/cc65-old/cc65-2.12.0
+#CC=$(DEVPREFIX)/src/cc65/cc65
+#AS=$(DEVPREFIX)/src/ca65/ca65
+#LD=$(DEVPREFIX)/src/ld65/ld65
+#AR=$(DEVPREFIX)/src/ar65/ar65
+#LIBPREFIX=$(DEVPREFIX)/libsrc
+#CCINC=$(DEVPREFIX)/include
+
+# CAUTION!!! DO NOT USE cl65 HERE, IT MAY NOT USE THE RIGHT SUBTOOLS
 
 all:
-	cp $(DEVPREFIX)/lib/apple2.lib run6502.lib
+	cp $(LIBPREFIX)/apple2.lib run6502.lib
+#	cp $(LIBPREFIX)/c64.lib run6502.lib
 
 	$(AR) d run6502.lib crt0.o
 	$(AR) d run6502.lib write.o
@@ -16,12 +27,14 @@ all:
 	$(AR) d run6502.lib close.o
 	$(AR) d run6502.lib fwrite.o
 
-	$(CL) -t none -c run6502.s -o run6502.o
-	$(CL) -t none -c crt0.s -o crt0.o
-	$(CL) -t none -c write.s -o write.o
-	$(CL) -t none -c read.s -o read.o
-	$(CL) -t none -c rwcommon.s -o rwcommon.o
-	$(CL) -t none -c fwrite.c -o fwrite.o
+	$(AS) -t none run6502.s -o run6502.o
+	$(AS) -t none crt0.s -o crt0.o
+	$(AS) -t none write.s -o write.o
+	$(AS) -t none read.s -o read.o
+	$(AS) -t none rwcommon.s -o rwcommon.o
+	$(CC) -t none -I $(CCINC) fwrite.c -o fwrite.s
+	$(AS) -t none fwrite.s -o fwrite.o
+	rm -f fwrite.s
 
 	$(AR) a run6502.lib crt0.o
 	$(AR) a run6502.lib read.o
@@ -32,3 +45,4 @@ all:
 
 clean:
 	rm -f *.o *.lib *.prg *.bin *~
+	rm -f fwrite.s
