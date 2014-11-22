@@ -4,6 +4,7 @@ AS=$(DEVPREFIX)/bin/ca65
 LD=$(DEVPREFIX)/bin/ld65
 AR=$(DEVPREFIX)/bin/ar65
 LIBPREFIX=$(DEVPREFIX)/lib
+CCINC=-I $(DEVPREFIX)/include
 
 #DEVPREFIX=~/Desktop/cc65/cc65-old/cc65-2.12.0
 #CC=$(DEVPREFIX)/src/cc65/cc65
@@ -11,13 +12,12 @@ LIBPREFIX=$(DEVPREFIX)/lib
 #LD=$(DEVPREFIX)/src/ld65/ld65
 #AR=$(DEVPREFIX)/src/ar65/ar65
 #LIBPREFIX=$(DEVPREFIX)/libsrc
-#CCINC=$(DEVPREFIX)/include
+#CCINC=-I $(DEVPREFIX)/include
 
 # CAUTION!!! DO NOT USE cl65 HERE, IT MAY NOT USE THE RIGHT SUBTOOLS
 
 all:
 	cp $(LIBPREFIX)/apple2.lib run6502.lib
-#	cp $(LIBPREFIX)/c64.lib run6502.lib
 
 	$(AR) d run6502.lib crt0.o
 	$(AR) d run6502.lib write.o
@@ -32,7 +32,9 @@ all:
 	$(AS) -t none write.s -o write.o
 	$(AS) -t none read.s -o read.o
 	$(AS) -t none rwcommon.s -o rwcommon.o
-	$(CC) -t none -I $(CCINC) fwrite.c -o fwrite.s
+# FIXME: rewrite this function in assembly, the include path may not
+#        actually be whats expected depending on compiler version
+	$(CC) -t none $(CCINC) fwrite.c -o fwrite.s
 	$(AS) -t none fwrite.s -o fwrite.o
 	rm -f fwrite.s
 
