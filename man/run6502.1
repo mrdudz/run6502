@@ -114,6 +114,12 @@ of memory:
 The format of the dump cannot currently be modified and consists of
 the current address followed by one, two or three hexadecimal bytes,
 and a symbolic representation of the instruction at that address.
+.It Fl E Ar addr
+Install an error trap at
+.Ar addr
+such that attempts to execute that address (via 'JMP', 'JSR', or
+as the target of the 'BRK' vector) will dump 64 lines of processor
+state logs and exit.
 .It Fl G Ar addr
 arrange that subroutine calls to
 .Ar addr
@@ -171,6 +177,9 @@ As with the
 option,
 .Ar end
 can be absolute or '+' followed by a byte count.
+.It Fl t
+enable trace mode. For each instruction, emit a line of output showing
+register state and the instruction.
 .It Fl v
 print version information and then exit.
 .It Fl X Ar addr
