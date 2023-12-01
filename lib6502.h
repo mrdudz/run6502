@@ -61,6 +61,7 @@ extern void   M6502_run(M6502 *mpu);
 extern int    M6502_disassemble(M6502 *mpu, uint16_t addr, char buffer[64]);
 extern void   M6502_dump(M6502 *mpu, char buffer[64]);
 extern void   M6502_delete(M6502 *mpu);
+extern void   M6502_log_printall(void);
 
 #define M6502_getVector(MPU, VEC)			\
   ( ( ((MPU)->memory[M6502_##VEC##VectorLSB]) )		\
